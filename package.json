@@ -1,34 +1,20 @@
 {
-  "name": "geethanjalee",
-  "version": "0.1.0",
+  "name": "geethanjalee-monorepo",
+  "version": "1.0.0",
   "private": true,
+  "description": "Geethanjalee Live in Concert 2026 — React (Vite) Frontend & NestJS Backend",
   "scripts": {
-    "dev": "next dev",
-    "build": "next build",
-    "start": "next start",
-    "lint": "next lint"
-  },
-  "dependencies": {
-    "clsx": "^2.1.1",
-    "framer-motion": "^12.4.7",
-    "lenis": "^1.1.20",
-    "lucide-react": "^0.475.0",
-    "next": "15.2.0",
-    "react": "^19.0.0",
-    "react-dom": "^19.0.0",
-    "remixicon": "^4.6.0",
-    "tailwind-merge": "^3.0.1"
+    "install:all": "npm install && npm --prefix backend install && npm --prefix frontend install",
+    "dev": "concurrently -n backend,frontend -c blue,yellow \"npm run dev:backend\" \"npm run dev:frontend\"",
+    "dev:backend": "npm --prefix backend run start:dev",
+    "dev:frontend": "npm --prefix frontend run dev",
+    "build": "npm run build:backend && npm run build:frontend",
+    "build:backend": "npm --prefix backend run build",
+    "build:frontend": "npm --prefix frontend run build",
+    "start:backend": "npm --prefix backend run start:prod",
+    "preview:frontend": "npm --prefix frontend run preview"
   },
   "devDependencies": {
-    "@eslint/eslintrc": "^3",
-    "@types/node": "^22",
-    "@types/react": "^19",
-    "@types/react-dom": "^19",
-    "autoprefixer": "^10.4.20",
-    "eslint": "^9",
-    "eslint-config-next": "15.2.0",
-    "postcss": "^8.5.3",
-    "tailwindcss": "^3.4.17",
-    "typescript": "^5"
+    "concurrently": "^9.1.2"
   }
 }

@@ -1,0 +1,23 @@
+import { Body, Controller, Get, Param, Post } from '@nestjs/common';
+import { CreateReservationDto } from './dto/create-reservation.dto';
+import { ReservationsService } from './reservations.service';
+
+@Controller('reservations')
+export class ReservationsController {
+  constructor(private readonly reservationsService: ReservationsService) {}
+
+  @Post()
+  create(@Body() createReservationDto: CreateReservationDto) {
+    return this.reservationsService.create(createReservationDto);
+  }
+
+  @Get()
+  findAll() {
+    return this.reservationsService.findAll();
+  }
+
+  @Get(':referenceCode')
+  findByReference(@Param('referenceCode') referenceCode: string) {
+    return this.reservationsService.findByReference(referenceCode);
+  }
+}
