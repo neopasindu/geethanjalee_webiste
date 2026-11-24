@@ -27,137 +27,159 @@ export default function Schedule() {
         </div>
 
         {/* Schedule List */}
-        <div className="flex flex-col gap-2">
+        <div className="flex flex-col gap-3 sm:gap-4">
           {CONCERT_SCHEDULE.map((item) => {
             const isLive = item.status === "tickets-live";
             const isComingSoon = item.status === "coming-soon";
-            const isPast = item.status === "past";
 
             return (
               <div
                 key={item.id}
-                className="group relative block border-b border-white/10 last:border-b-0 py-5 sm:py-7 px-3 sm:px-6 -mx-3 sm:-mx-6 transition-all duration-300 hover:bg-white/[0.03] rounded-2xl"
+                className={`group relative rounded-2xl transition-all duration-300 py-5 sm:py-6 px-4 sm:px-7 ${
+                  isLive
+                    ? "bg-gradient-to-r from-accent/[0.10] via-white/[0.03] to-transparent border border-accent/40 shadow-[0_4px_30px_rgba(212,160,23,0.12)] hover:border-accent/70 hover:shadow-[0_6px_35px_rgba(212,160,23,0.22)]"
+                    : "border border-white/10 bg-white/[0.015] hover:bg-white/[0.04] hover:border-white/25"
+                }`}
               >
                 {/* Mobile View */}
                 <div className="block md:hidden">
-                  <div className="flex items-center justify-between gap-4">
-                    <div className="flex items-center gap-3">
-                      <span className="text-3xl font-bold font-display text-white">
+                  <div className="flex items-center justify-between gap-3">
+                    {/* Date Badge */}
+                    <div
+                      className={`flex flex-col items-center justify-center rounded-xl px-2.5 py-1.5 min-w-[62px] border ${
+                        isLive
+                          ? "bg-accent/15 border-accent/40 text-accent"
+                          : "bg-white/[0.04] border-white/10"
+                      }`}
+                    >
+                      <span className="text-[11px] font-bold uppercase font-prompt leading-tight text-accent">
+                        {item.month}
+                      </span>
+                      <span className="text-2xl font-bold font-display leading-tight text-white">
                         {item.day}
                       </span>
-                      <div className="flex flex-col text-xs font-medium text-neutral-400">
-                        <span className="text-accent font-semibold">{item.month}</span>
-                        <span>{item.weekday}</span>
-                      </div>
+                      <span className="text-[10px] text-neutral-400 font-prompt leading-none mt-0.5">
+                        {item.year}
+                      </span>
                     </div>
 
-                    <div className="flex-1 min-w-0 px-2">
-                      <h3 className="text-sm font-semibold text-white truncate">{item.venue}</h3>
-                      <p className="text-xs text-neutral-400 truncate">{item.city}</p>
+                    {/* Venue & City */}
+                    <div className="flex-1 min-w-0 px-1">
+                      <h3 className="text-sm font-semibold truncate font-prompt text-white">
+                        {item.venue}
+                      </h3>
+                      <p className="text-xs text-neutral-400 truncate mt-0.5 font-prompt">
+                        {item.city}
+                      </p>
+                      {isLive && (
+                        <span className="inline-flex items-center gap-1 text-[10px] font-bold tracking-wider uppercase text-accent mt-1 font-prompt">
+                          <span className="w-1.5 h-1.5 rounded-full bg-accent animate-pulse" />
+                          Tickets Live
+                        </span>
+                      )}
                     </div>
 
+                    {/* Action Button */}
                     <div className="shrink-0">
                       {isLive ? (
                         <Link
                           href={item.ticketUrl || "#tickets"}
-                          className="px-3 py-1.5 rounded-full bg-accent text-white text-xs font-semibold shadow-md shadow-accent/20"
+                          className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full bg-accent hover:bg-accent-hover text-white text-xs font-semibold font-prompt shadow-md shadow-accent/25 transition-all"
                         >
-                          Book Now
+                          <span>Book</span>
+                          <i className="ri-arrow-right-line text-xs" />
                         </Link>
                       ) : isComingSoon ? (
-                        <span className="text-[11px] font-medium text-neutral-400 bg-white/5 border border-white/10 px-2.5 py-1 rounded-full">
+                        <span className="text-[11px] font-medium text-neutral-400 bg-white/5 border border-white/10 px-2.5 py-1 rounded-full font-prompt">
                           Coming Soon
                         </span>
                       ) : (
-                        <span className="text-[11px] font-medium text-neutral-500 bg-white/5 px-2.5 py-1 rounded-full">
-                          Event Ended
+                        <span className="text-[11px] font-medium text-neutral-500 bg-white/5 px-2.5 py-1 rounded-full font-prompt">
+                          Ended
                         </span>
                       )}
                     </div>
                   </div>
                 </div>
 
-                {/* Desktop View with Dual-Layer Roll-Up Effect (Kataka Signature) */}
-                <div className="hidden md:block relative overflow-hidden p-1">
-                  {/* Layer 1: Normal State (White & Gray) */}
-                  <div className="transition-transform duration-300 ease-out group-hover:-translate-y-full">
-                    <div className="flex items-center justify-between w-full gap-6">
-                      <div className="flex items-center gap-8 shrink-0">
-                        <span className="text-4xl font-display font-medium text-white w-20">
-                          {item.year}
-                        </span>
-                        <div className="flex flex-col font-medium text-xs uppercase tracking-wider text-neutral-400 w-12">
-                          <span className="text-accent">{item.month}</span>
-                          <span>{item.weekday}</span>
-                        </div>
-                        <span className="text-4xl font-display font-semibold text-white w-14">
-                          {item.day}
-                        </span>
-                      </div>
+                {/* Desktop View */}
+                <div className="hidden md:flex items-center justify-between w-full gap-6">
+                  {/* Date Section: Year, Month/Weekday, Day */}
+                  <div className="flex items-center gap-6 lg:gap-8 shrink-0">
+                    {/* Year */}
+                    <span
+                      className={`text-3xl lg:text-4xl font-display font-medium w-[125px] lg:w-[135px] shrink-0 tracking-tight transition-colors duration-300 ${
+                        isLive
+                          ? "text-accent drop-shadow-[0_0_12px_rgba(212,160,23,0.4)]"
+                          : "text-white group-hover:text-accent"
+                      }`}
+                    >
+                      {item.year}
+                    </span>
 
-                      <div className="flex-1 min-w-0">
-                        <h3 className="text-lg font-medium text-white truncate">{item.venue}</h3>
-                        <p className="text-xs text-neutral-400">{item.city}</p>
-                      </div>
-
-                      <div className="shrink-0 w-32 text-right">
-                        {isLive ? (
-                          <span className="inline-block text-xs font-semibold text-white bg-accent px-4 py-1.5 rounded-full shadow-md shadow-accent/30">
-                            Book Tickets
-                          </span>
-                        ) : isComingSoon ? (
-                          <span className="text-xs font-medium text-neutral-400 border border-white/10 px-3.5 py-1.5 rounded-full bg-white/5">
-                            Coming Soon
-                          </span>
-                        ) : (
-                          <span className="text-xs font-medium text-neutral-500 bg-white/5 px-3 py-1.5 rounded-full">
-                            Event Ended
-                          </span>
-                        )}
-                      </div>
+                    {/* Month and Weekday */}
+                    <div className="flex flex-col font-prompt font-semibold text-xs uppercase tracking-wider w-[54px] shrink-0 leading-tight">
+                      <span className="text-accent">{item.month}</span>
+                      <span className="text-neutral-400 group-hover:text-neutral-200 transition-colors">
+                        {item.weekday}
+                      </span>
                     </div>
+
+                    {/* Day */}
+                    <span
+                      className={`text-3xl lg:text-4xl font-display font-bold w-[65px] shrink-0 transition-colors duration-300 ${
+                        isLive
+                          ? "text-accent drop-shadow-[0_0_12px_rgba(212,160,23,0.4)]"
+                          : "text-white group-hover:text-accent"
+                      }`}
+                    >
+                      {item.day}
+                    </span>
                   </div>
 
-                  {/* Layer 2: Hover State (Slides up in Glowing Accent Color) */}
-                  <div className="absolute top-0 left-0 w-full transition-transform duration-300 ease-out translate-y-full group-hover:translate-y-0">
-                    <div className="flex items-center justify-between w-full gap-6">
-                      <div className="flex items-center gap-8 shrink-0">
-                        <span className="text-4xl font-display font-medium text-accent w-20 drop-shadow-[0_0_12px_rgba(212,160,23,0.5)]">
-                          {item.year}
+                  {/* Venue & City */}
+                  <div className="flex-1 min-w-0 pr-4">
+                    <div className="flex items-center gap-3">
+                      <h3
+                        className={`text-base lg:text-lg font-semibold truncate transition-colors duration-300 ${
+                          isLive
+                            ? "text-white group-hover:text-accent"
+                            : "text-neutral-100 group-hover:text-accent"
+                        }`}
+                      >
+                        {item.venue}
+                      </h3>
+                      {isLive && (
+                        <span className="shrink-0 inline-flex items-center gap-1.5 text-[11px] font-bold tracking-wider uppercase bg-accent/20 border border-accent/40 text-accent px-2.5 py-0.5 rounded-full font-prompt">
+                          <span className="w-1.5 h-1.5 rounded-full bg-accent animate-pulse" />
+                          Main Event
                         </span>
-                        <div className="flex flex-col font-medium text-xs uppercase tracking-wider text-accent w-12">
-                          <span>{item.month}</span>
-                          <span>{item.weekday}</span>
-                        </div>
-                        <span className="text-4xl font-display font-semibold text-accent w-14 drop-shadow-[0_0_12px_rgba(212,160,23,0.5)]">
-                          {item.day}
-                        </span>
-                      </div>
-
-                      <div className="flex-1 min-w-0">
-                        <h3 className="text-lg font-medium text-accent truncate">{item.venue}</h3>
-                        <p className="text-xs text-neutral-300">{item.city}</p>
-                      </div>
-
-                      <div className="shrink-0 w-32 text-right">
-                        {isLive ? (
-                          <Link
-                            href={item.ticketUrl || "#tickets"}
-                            className="inline-block text-xs font-semibold text-white bg-accent-hover hover:bg-accent px-4 py-1.5 rounded-full shadow-lg shadow-accent/50 scale-105 transition-transform"
-                          >
-                            Book Tickets
-                          </Link>
-                        ) : isComingSoon ? (
-                          <span className="text-xs font-medium text-neutral-300 border border-accent/40 px-3.5 py-1.5 rounded-full bg-accent/10">
-                            Coming Soon
-                          </span>
-                        ) : (
-                          <span className="text-xs font-medium text-neutral-500 bg-white/5 px-3 py-1.5 rounded-full">
-                            Event Ended
-                          </span>
-                        )}
-                      </div>
+                      )}
                     </div>
+                    <p className="text-xs sm:text-sm text-neutral-400 group-hover:text-neutral-300 transition-colors mt-0.5 font-prompt">
+                      {item.city}
+                    </p>
+                  </div>
+
+                  {/* CTA Button / Status */}
+                  <div className="shrink-0 w-36 text-right">
+                    {isLive ? (
+                      <Link
+                        href={item.ticketUrl || "#tickets"}
+                        className="inline-flex items-center justify-center gap-2 text-xs lg:text-sm font-semibold font-prompt text-white bg-accent hover:bg-accent-hover px-5 py-2.5 rounded-full shadow-lg shadow-accent/30 hover:shadow-accent/50 hover:scale-105 transition-all duration-300"
+                      >
+                        <span>Book Tickets</span>
+                        <i className="ri-arrow-right-line text-xs transition-transform group-hover:translate-x-0.5" />
+                      </Link>
+                    ) : isComingSoon ? (
+                      <span className="inline-block text-xs font-medium font-prompt text-neutral-400 border border-white/10 px-4 py-2 rounded-full bg-white/5">
+                        Coming Soon
+                      </span>
+                    ) : (
+                      <span className="inline-block text-xs font-medium font-prompt text-neutral-500 bg-white/5 px-4 py-2 rounded-full">
+                        Event Ended
+                      </span>
+                    )}
                   </div>
                 </div>
               </div>
